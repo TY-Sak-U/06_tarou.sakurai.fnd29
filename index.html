@@ -18,14 +18,17 @@
     <div id="startmsg">下記のボタンを押してビンゴ開始！</div>
   </h2>
   <p>
-    <a href = "./htm/main.htm" target="_blank">
+    <a href = "./htm/main.htm" target="_blank" onclick="startAudio()">
       <img
-        class="start-button"
+        id="start-button"
         src = "./img/startbutton.png"
         alt = "ボタンを押してビンゴスタート！"
         width = 300px
       >
     </a>
+    <audio id="start_audio">
+      <source src="./audio/start.mp3" type="audio/mp3">
+    </audio>
   </p>
     <!-- <h3>30分悩んで進まなくなったら…helpチャンネルで質問してみましょう！</h3> -->
 </body>

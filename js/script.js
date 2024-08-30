@@ -87,4 +87,26 @@ function $(id) {
   return document.getElementById(id);
 }
 
+const sound = document.getElementById("activate");
+sound.addEventListener("click", audio);
 
+const startSound = document.getElementById("start-button");
+sound.addEventListener("click", startAudio);
+
+const resetSound = document.getElementById("reset");
+sound.addEventListener("click", startAudio);
+
+function audio() {
+  document.getElementById('fix_audio').currentTime = 0; //連続クリックに対応
+  document.getElementById('fix_audio').play(); //クリックしたら音を再生
+}
+
+function startAudio() {
+  document.getElementById('start_audio').currentTime = 0; //連続クリックに対応
+  document.getElementById('start_audio').play(); //クリックしたら音を再生
+}
+
+function resetAudio() {
+  document.getElementById('reset_audio').currentTime = 0; //連続クリックに対応
+  document.getElementById('reset_audio').play(); //クリックしたら音を再生
+}

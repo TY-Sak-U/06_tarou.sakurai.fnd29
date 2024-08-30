@@ -18,21 +18,19 @@
     // 次の数字を表示
     function next() {
       // 以前、値が初期化されているか確認
-      if (typeof(localStorage.bingo) == "undefined") {
+      if (typeof(localStorage.bingo) === "undefined") {
         initTable(); // 初期化
       }
       // ストレージから値を一つ取り出す
       let tbl = JSON.parse(localStorage.bingo);
       let no = tbl.shift();
-      // 画面に表示
+     // 画面に表示
       $("bingoresult").innerHTML = "<img src='../img/waitanime.gif',width =100px>";
       $("leftover").innerHTML = "残りは、" + tbl.length + "個";
       setTimeout(function(){
-        $("bingoresult").innerText = no;
+        $("bingoresult").innerText = "  " + no;
+        audio();
       },500);
-      // setTimeout(function(){
-      //   $("bingoresult").innerHTML = "";
-      // },500);
       // 最後まで行ったか確認
       if (tbl.length === 0) {
         alert("すべての数字を取り出しました。");
@@ -41,18 +39,20 @@
         // 残りをストレージに保存する
         localStorage.bingo = JSON.stringify(tbl);
         // 来歴の表示
-        if (result === "") {
-          result = no;
+        if (localStorage.result === "") {
+          localStorage.result = no;
         } else {
-          result += "," + no;
+          localStorage.result += ", " + no;
         }
         setTimeout(function(){;
-          $("result").innerText = result;
+          $("result").innerText = localStorage.result;
         },500);
       }
     }
+
     // リセットする
     function reset() {
+      resetAudio();
       let r = confirm("リセットしても良いですか?");
       if (!r) return;
       initTable();
@@ -79,37 +79,50 @@
       console.log(tbl);
       // localStorageに保存する
       localStorage.bingo = JSON.stringify(tbl);
+      localStorage.result = "";
       window.location.reload();
     }
+
+    // id呼び出し部分の簡略化用関数
     function $(id) {
       return document.getElementById(id);
     }
+
+    function audio() {
+      document.getElementById('fix_audio').currentTime = 0; //連続クリックに対応
+      document.getElementById('fix_audio').play(); //クリックしたら音を再生
+    }
+
+    function resetAudio() {
+      document.getElementById('reset_audio').currentTime = 0; //連続クリックに対応
+      document.getElementById('reset_audio').play(); //クリックしたら音を再生
+    }
+
   </script>
 </head>
 
 <body>
   <h1 id="reset">JS BINGO!</h1>
-  <!-- <h2>Mac をお使いの方は、 <font color="blue"> Cmd + Option + J</font><br>
-    Windows/Linux をお使いの方は、 <font color="blue"> Control+Shift+J</font> <br>
-    をクリックして、デベロッパーツールを開いてください。</h2> -->
-    <div>
-    
-    </div>
-    <h2>
-     <div id="message">ビンゴマシーンの画像をクリックして抽選開始！</div>
-     </h2>
-    <h4>（タイトルをクリックするとリセットするよ）</h4>
+  <h2>
+    <div id="message">ビンゴマシーンの画像をクリックして抽選開始！</div>
+  </h2>
+  <h4>（タイトルをクリックするとリセットするよ）</h4>
   <nav>
     <div class = "home", id = "activate"></div>
     <div id = "bingoresult"></div>
   </nav>
-  <br>
+  <audio id="fix_audio">
+    <source src="../audio/fix.mp3" type="audio/mp3">
+  </audio>    
+  <audio id="reset_audio">
+    <source src="../audio/reset.mp3" type="audio/mp3">
+  </audio>
   <br>
   <br>
    <h1>これまでの抽選番号</h1>
   <div id="result">  </div>
-   <h3 id="leftover">残りは、75個</h3>
-  <!-- <script type="text/javascript" src="../js/script.js"></script> -->
+   <h3 id="leftover">残り</h3>
+  <script type="text/javascript" src="../js/script.js"></script>
 </body>
 
 </html>
