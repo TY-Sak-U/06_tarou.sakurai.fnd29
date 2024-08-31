@@ -1,112 +1,105 @@
 'use strict'
 // 1行目に記載している 'use strict' は削除しないでください
-
-function test(actual, expected) {
-  if (JSON.stringify(actual) === JSON.stringify(expected)) {
-    console.log("OK! Test PASSED.");
+ 
+// 次の数字を表示 : main.htm
+function next() {
+  // 以前、値が初期化されているか確認
+  if (typeof (localStorage.bingo) === "undefined") {
+    initTable(); // 初期化
+  }
+  // ストレージから値を一つ取り出す
+  let tbl = JSON.parse(localStorage.bingo);
+  let no = tbl.shift();
+  // 画面に表示
+  $("bingoresult").innerHTML = "<img src='../img/waitanime.gif',width =100px>";
+  $("leftover").innerHTML = "残りは、" + tbl.length + "個";
+  setTimeout(function () {
+    $("bingoresult").innerText = "  " + no;
+    audio();
+  }, 500);
+  // 最後まで行ったか確認
+  if (tbl.length === 0) {
+    alert("すべての数字を取り出しました。");
+    initTable();
   } else {
-    console.error("Test FAILED. Try again!");
-    console.log("    actual: ", actual);
-    console.log("  expected: ", expected);
-    console.trace();
-  }
-}
-
-function example(num) {
-  console.log(num);
-}
-
-function sleep(waitMsec) {
-  let startMsec = new Date();
-
-  // 指定ミリ秒間だけループさせる（CPUは常にビジー状態）
-  while (new Date() - startMsec < waitMsec);
-}
-
-async function wait(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
-
-function sleepWithInterval(ms) {
-  let start = new Date().getTime();
-  let end = start;
-  while(end < start + ms) {
-      end = new Date().getTime();
-  }
-}
-
-function makeChooseWindow() {
-  window.open("./select.htm", null, "width = 200, height = 150");
-}
-
-function openPopup(url) {
-  window.open(url, '_blank', 'width=300, height=400');
-}
-
-// const myElement = document.getElementById("activate");
-// myElement.addEventListener("click", makeChooseWindow);
-
-let bingoAry = [1, 2, 3, 4];
-const myButton = document.getElementById("bingobutton");
-myButton.addEventListener("click", displayNumber(5));
-
-function displayNumber(ary) {
-  let display = document.getElementById("bingonumber");
-  display.textContent = 5;
-}
-
-$("bingobutton").onlick = next;
-
-const reset = document.getElementById("reset")
-reset.addEventListener("click", initTable)
-// 
-    // 初期化する
-    function initTable() {
-      // 1から75までの数を配列に入れる
-      let tbl = [];
-      for (let no = 1; no <= 75; no++) {
-        tbl.push(no);
-      }
-      // 配列をシャッフルする
-      let n = tbl.length;
-      let tmp;
-      while (n) {
-        i = Math.floor(Math.random() * n);
-        n--;
-        tmp = tbl[n];
-        tbl[n] = tbl[i];
-        tbl[i] = tmp;
-      }
-      console.log(tbl);
-      // localStorageに保存する
-      localStorage.bingo = JSON.stringify(tbl);
-      window.location.reload();
+    // 残りをストレージに保存する
+    localStorage.bingo = JSON.stringify(tbl);
+    // 来歴の表示
+    if (localStorage.result === "") {
+      localStorage.result = no;
+    } else {
+      localStorage.result += ", " + no;
     }
+    // 数字の表示をアニメーション終了と同期させる
+    setTimeout(function () {
+      ;
+      $("result").innerText = localStorage.result;
+    }, 500);
+  }
+}
 
+// リセットする :main.htm
+function reset() {
+  resetAudio();
+  let r = confirm("リセットしても良いですか?");
+  if (!r) return;
+  initTable();
+  $("activate").innerHTML = "";
+  $("leftover").innerHTML = "";
+}
+
+// 初期化する :main.htm
+function initTable() {
+  // 1から75までの数を配列に入れる
+  let tbl = [];
+  for (let no = 1; no <= 75; no++) {
+    tbl.push(no);
+  }
+  // 配列をシャッフルする
+  let n = tbl.length;
+  let i;
+  let tmp;
+  while (n) {
+    i = Math.floor(Math.random() * n);
+    n--;
+    tmp = tbl[n];
+    tbl[n] = tbl[i];
+    tbl[i] = tmp;
+  }
+  console.log(tbl);
+  // localStorageに保存する
+  localStorage.bingo = JSON.stringify(tbl);
+  localStorage.result = "";
+  window.location.reload();
+}
+
+// id呼び出し部分の簡略化用関数 :main.htm
 function $(id) {
   return document.getElementById(id);
 }
 
-const sound = document.getElementById("activate");
-sound.addEventListener("click", audio);
-
+// 効果音呼び出しイベント定義(スタート) :main.htm
 const startSound = document.getElementById("start-button");
 sound.addEventListener("click", startAudio);
 
+// 効果音呼び出しイベント定義(リセット) :main.htm
 const resetSound = document.getElementById("reset");
-sound.addEventListener("click", startAudio);
+sound.addEventListener("click", resetAudio);
 
-function audio() {
-  document.getElementById('fix_audio').currentTime = 0; //連続クリックに対応
-  document.getElementById('fix_audio').play(); //クリックしたら音を再生
-}
-
+// 効果音の再生（メイン画面呼び出し） : index.thml
 function startAudio() {
   document.getElementById('start_audio').currentTime = 0; //連続クリックに対応
   document.getElementById('start_audio').play(); //クリックしたら音を再生
 }
 
+// 効果音の再生（リセット） :main.htm
 function resetAudio() {
   document.getElementById('reset_audio').currentTime = 0; //連続クリックに対応
   document.getElementById('reset_audio').play(); //クリックしたら音を再生
+}
+
+// 効果音の再生（決定） :main.htm
+function audio() {
+  document.getElementById('fix_audio').currentTime = 0; //連続クリックに対応
+  document.getElementById('fix_audio').play(); //クリックしたら音を再生
 }
