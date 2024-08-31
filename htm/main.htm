@@ -10,95 +10,11 @@
     // プログラムの初期化
     window.onload = function () {
       // イベントを設定
-      $("activate").onclick = next;
-      $("reset").onclick = reset;
+      document.getElementById("activate").onclick = next;
+      document.getElementById("reset").onclick = reset;
+      document.getElementById("result").innerText = localStorage.result;
     };
-    let result = "";
-
-    // 次の数字を表示
-    function next() {
-      // 以前、値が初期化されているか確認
-      if (typeof(localStorage.bingo) === "undefined") {
-        initTable(); // 初期化
-      }
-      // ストレージから値を一つ取り出す
-      let tbl = JSON.parse(localStorage.bingo);
-      let no = tbl.shift();
-     // 画面に表示
-      $("bingoresult").innerHTML = "<img src='../img/waitanime.gif',width =100px>";
-      $("leftover").innerHTML = "残りは、" + tbl.length + "個";
-      setTimeout(function(){
-        $("bingoresult").innerText = "  " + no;
-        audio();
-      },500);
-      // 最後まで行ったか確認
-      if (tbl.length === 0) {
-        alert("すべての数字を取り出しました。");
-        initTable();
-      } else {
-        // 残りをストレージに保存する
-        localStorage.bingo = JSON.stringify(tbl);
-        // 来歴の表示
-        if (localStorage.result === "") {
-          localStorage.result = no;
-        } else {
-          localStorage.result += ", " + no;
-        }
-        setTimeout(function(){;
-          $("result").innerText = localStorage.result;
-        },500);
-      }
-    }
-
-    // リセットする
-    function reset() {
-      resetAudio();
-      let r = confirm("リセットしても良いですか?");
-      if (!r) return;
-      initTable();
-      $("activate").innerHTML = "";
-      $("leftover").innerHTML = "";
-    }
-    // 初期化する
-    function initTable() {
-      // 1から75までの数を配列に入れる
-      let tbl = [];
-      for (let i = 1; i <= 75; i++) {
-        tbl.push(i);
-      }
-      // 配列をシャッフルする
-      let lastnumber = tbl.length;
-      let tmp;
-      while (lastnumber) {
-        i = Math.floor(Math.random() * lastnumber);
-        lastnumber--;
-        temp = tbl[lastnumber];
-        tbl[lastnumber] = tbl[i];
-        tbl[i] = temp;
-      }
-      console.log(tbl);
-      // localStorageに保存する
-      localStorage.bingo = JSON.stringify(tbl);
-      localStorage.result = "";
-      window.location.reload();
-    }
-
-    // id呼び出し部分の簡略化用関数
-    function $(id) {
-      return document.getElementById(id);
-    }
-
-    function audio() {
-      document.getElementById('fix_audio').currentTime = 0; //連続クリックに対応
-      document.getElementById('fix_audio').play(); //クリックしたら音を再生
-    }
-
-    function resetAudio() {
-      document.getElementById('reset_audio').currentTime = 0; //連続クリックに対応
-      document.getElementById('reset_audio').play(); //クリックしたら音を再生
-    }
-
-  </script>
+    </script>
 </head>
 
 <body>
