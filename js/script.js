@@ -1,6 +1,13 @@
 'use strict'
 // 1行目に記載している 'use strict' は削除しないでください
- 
+
+// Mainウィンドウの初期化 : main.htm
+function openWindowInitialize(){
+  $("activate").onclick = next;
+  $("reset").onclick = reset;
+  $("result").innerText = localStorage.result;
+}
+
 // 次の数字を表示 : main.htm
 function next() {
   // 以前、値が初期化されているか確認
