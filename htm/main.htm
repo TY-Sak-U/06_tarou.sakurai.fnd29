@@ -6,18 +6,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="theme-color" content="#000000">
   <link rel="stylesheet" href="../css/style.css">
-  <script type="text/javascript">
-    // プログラムの初期化
-    window.onload = function () {
-      // イベントを設定
-      document.getElementById("activate").onclick = next;
-      document.getElementById("reset").onclick = reset;
-      document.getElementById("result").innerText = localStorage.result;
-    };
-    </script>
-</head>
+ </head>
 
-<body>
+<body onload="openWindowInitialize()">
   <h1 id="reset">JS BINGO!</h1>
   <h2>
     <div id="message">ビンゴマシーンの画像をクリックして抽選開始！</div>
